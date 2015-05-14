@@ -3,26 +3,19 @@
 
 //var jsnums = require('./js-numbers');
 
-
 var types = {};
-
 
 (function () {
 
 //////////////////////////////////////////////////////////////////////
 
-
 var appendChild = function(parent, child) {
     parent.appendChild(child);
 };
 
-
-
 var hasOwnProperty = {}.hasOwnProperty;
 
 //////////////////////////////////////////////////////////////////////
-
-
 
 var _eqHashCodeCounter = 0;
 makeEqHashCode = function() {
@@ -30,7 +23,6 @@ makeEqHashCode = function() {
     return _eqHashCodeCounter;
 };
 
-    
 // getHashCode: any -> (or fixnum string)
 // Produces a hashcode appropriate for eq.
 getEqHashCode = function(x) {
@@ -46,7 +38,6 @@ getEqHashCode = function(x) {
     return 0;
 };
 
-
 // Union/find for circular equality testing.
 
 var UnionFind = function() {
@@ -58,7 +49,7 @@ var UnionFind = function() {
 // find: ptr -> UnionFindNode
 // Returns the representative for this ptr.
 UnionFind.prototype.find = function(ptr) {
-	var parent = (this.parentMap.containsKey(ptr) ? 
+	var parent = (this.parentMap.containsKey(ptr) ?
 		      this.parentMap.get(ptr) : ptr);
 	if (parent === ptr) {
 	    return parent;
@@ -76,8 +67,6 @@ UnionFind.prototype.merge = function(ptr1, ptr2) {
 	this.parentMap.put(this.find(ptr1), this.find(ptr2));
 };
 
-
-
 //////////////////////////////////////////////////////////////////////
 
 // Class inheritance infrastructure
@@ -87,62 +76,62 @@ var Class = (function(){
 	var initializing = false, fnTest = /xyz/.test(function(){xyz;}) ? /\b_super\b/ : /.*/;
 	// The base Class implementation (does nothing)
 	var innerClass = function(){};
-	
+
 	// Create a new Class that inherits from this class
 	innerClass.extend = function(prop) {
 		var _super = this.prototype;
-		
+
 		// Instantiate a base class (but only create the instance,
 		// don't run the init constructor)
 		initializing = true;
 		var prototype = new this();
 		initializing = false;
-		
+
 		// Copy the properties over onto the new prototype
 		for (var name in prop) {
 			// Check if we're overwriting an existing function
-			prototype[name] = typeof prop[name] == "function" && 
+			prototype[name] = typeof prop[name] == "function" &&
 				typeof _super[name] == "function" && fnTest.test(prop[name]) ?
 				(function(name, fn){
 					return function() {
 						var tmp = this._super;
-						
+
 						// Add a new ._super() method that is the same method
 						// but on the super-class
 						this._super = _super[name];
-						
+
 						// The method only need to be bound temporarily, so we
 						// remove it when we're done executing
-						var ret = fn.apply(this, arguments);				
+						var ret = fn.apply(this, arguments);
 						this._super = tmp;
-						
+
 						return ret;
 					};
 				})(name, prop[name]) :
 				prop[name];
 		}
-		
+
 		// The dummy class constructor
 		var Dummy = function() {
 			// All construction is actually done in the init method
 			if ( !initializing && this.init )
 				this.init.apply(this, arguments);
 		}
-		
+
 		// Populate our constructed prototype object
 		Dummy.prototype = prototype;
-		
+
 		// Enforce the constructor to be what we expect
 		Dummy.constructor = Dummy;
 
 		// And make this class extendable
 		Dummy.extend = arguments.callee;
-		
+
 		return Dummy;
 	};
 	return innerClass;
 })();
- 
+
 function makeLParen(){
    var node = document.createElement('span');
    node.appendChild(document.createTextNode("("));
@@ -158,7 +147,6 @@ function makeRParen(){
 }
 
 //////////////////////////////////////////////////////////////////////
-
 
 StructType = function(name, type, numberOfArgs, numberOfFields, firstField,
 		      constructor, predicate, accessor, mutator) {
@@ -181,7 +169,6 @@ StructType.prototype.toString = function() {
 StructType.prototype.isEqual = function(other, aUnionFind) {
 	return this === other;
 };
-
 
 var makeStructureType = function(theName, parentType, initFieldCnt, autoFieldCnt, autoV, guard) {
     // If no parent type given, then the parent type is Struct
@@ -222,7 +209,7 @@ var makeStructureType = function(theName, parentType, initFieldCnt, autoFieldCnt
 			} else {
 				guardedArgs = [guardRes];
 			}
-			
+
 			var parentArgs = guardedArgs.slice(0, numParentArgs);
 			that._super(name, parentArgs);
 
@@ -262,11 +249,11 @@ var makeStructureType = function(theName, parentType, initFieldCnt, autoFieldCnt
 // Structures.
 var Struct = Class.extend({
 	init: function (constructorName, fields) {
-	    this._constructorName = constructorName; 
+	    this._constructorName = constructorName;
 	    this._fields = [];
 	},
 
-	toWrittenString: function(cache) { 
+	toWrittenString: function(cache) {
 	    //    cache.put(this, true);
 	    var buffer = [];
 	    var i;
@@ -297,7 +284,6 @@ var Struct = Class.extend({
 	    return node;
 	},
 
-
 	isEqual: function(other, aUnionFind) {
 	    if ( other.type == undefined ||
 		 this.type !== other.type ||
@@ -317,8 +303,6 @@ var Struct = Class.extend({
 });
 Struct.prototype.type = Struct;
 
-
-
 //////////////////////////////////////////////////////////////////////
 
 // Regular expressions.
@@ -327,13 +311,9 @@ var RegularExpression = function(pattern) {
     this.pattern = pattern;
 };
 
-
 var ByteRegularExpression = function(pattern) {
     this.pattern = pattern;
 };
-
-
-
 
 //////////////////////////////////////////////////////////////////////
 
@@ -342,7 +322,6 @@ var ByteRegularExpression = function(pattern) {
 var Path = function(p) {
     this.path = p;
 };
-
 
 //////////////////////////////////////////////////////////////////////
 
@@ -375,10 +354,9 @@ Bytes.prototype.subbytes = function(start, end) {
 	if (end == null || end == undefined) {
 		end = this.bytes.length;
 	}
-	
+
 	return new Bytes( this.bytes.slice(start, end), true );
 };
-
 
 Bytes.prototype.toString = function() {
 	var ret = '';
@@ -424,12 +402,9 @@ var escapeByte = function(aByte) {
 	return returnVal;
 };
 
-
-
-
 //////////////////////////////////////////////////////////////////////
 // Boxes
-    
+
 var Box = function(x, mutable) {
 	this.val = x;
 	this.mutable = mutable;
@@ -469,13 +444,6 @@ Box.prototype.toDomNode = function(cache) {
 
 //////////////////////////////////////////////////////////////////////
 
-
-
-
-
-
-
-
 // We are reusing the built-in Javascript boolean class here.
 Logic = {
     TRUE : true,
@@ -497,15 +465,12 @@ Boolean.prototype.isEqual = function(other, aUnionFind){
     return this == other;
 };
 
-
-
-
 // Chars
 // Char: string -> Char
 Char = function(val){
     this.val = val;
 };
-    
+
 Char.makeInstance = function(val){
     return new Char(val);
 };
@@ -553,7 +518,7 @@ Char.prototype.isEqual = function(other, aUnionFind){
 };
 
 //////////////////////////////////////////////////////////////////////
-    
+
 // Symbols
 
 //////////////////////////////////////////////////////////////////////
@@ -562,7 +527,7 @@ var Symbol = function(val) {
 };
 
 var symbolCache = {};
-    
+
 // makeInstance: string -> Symbol.
 Symbol.makeInstance = function(val) {
     // To ensure that we can eq? symbols with equal values.
@@ -571,12 +536,11 @@ Symbol.makeInstance = function(val) {
     }
     return symbolCache[val];
 };
-    
+
 Symbol.prototype.isEqual = function(other, aUnionFind) {
     return other instanceof Symbol &&
     this.val == other.val;
 };
-    
 
 Symbol.prototype.toString = function() {
     return this.val;
@@ -599,14 +563,7 @@ Symbol.prototype.toDomNode = function(cache) {
     return wrapper;
 };
 
-
-
 //////////////////////////////////////////////////////////////////////
-
-
-
-
-
 
 // Keywords
 
@@ -615,7 +572,6 @@ var Keyword = function(val) {
 };
 
 var keywordCache = {};
-    
 
 // makeInstance: string -> Keyword.
 Keyword.makeInstance = function(val) {
@@ -625,12 +581,11 @@ Keyword.makeInstance = function(val) {
     }
     return keywordCache[val];
 };
-    
+
 Keyword.prototype.isEqual = function(other, aUnionFind) {
     return other instanceof Keyword &&
     this.val == other.val;
 };
-    
 
 Keyword.prototype.toString = function() {
     return this.val;
@@ -644,17 +599,11 @@ Keyword.prototype.toDisplayedString = function(cache) {
     return this.val;
 };
 
-
 //////////////////////////////////////////////////////////////////////
 
-
-    
-    
-    
 Empty = function() {
 };
 Empty.EMPTY = new Empty();
-
 
 Empty.prototype.isEqual = function(other, aUnionFind) {
     return other instanceof Empty;
@@ -677,13 +626,11 @@ Empty.prototype.toWrittenString = function(cache) { return "empty"; };
 Empty.prototype.toDisplayedString = function(cache) { return "empty"; };
 Empty.prototype.toString = function(cache) { return "()"; };
 
-
-    
 // Empty.append: (listof X) -> (listof X)
 Empty.prototype.append = function(b){
     return b;
 };
-    
+
 Cons = function(f, r) {
     this.f = f;
     this.r = r;
@@ -698,11 +645,10 @@ Cons.prototype.reverse = function() {
     }
     return ret;
 };
-    
+
 Cons.makeInstance = function(f, r) {
     return new Cons(f, r);
 };
-
 
 // FIXME: can we reduce the recursion on this?
 Cons.prototype.isEqual = function(other, aUnionFind) {
@@ -712,19 +658,19 @@ Cons.prototype.isEqual = function(other, aUnionFind) {
     return (isEqual(this.first(), other.first(), aUnionFind) &&
 	    isEqual(this.rest(), other.rest(), aUnionFind));
 };
-    
+
 Cons.prototype.first = function() {
     return this.f;
 };
-    
+
 Cons.prototype.rest = function() {
     return this.r;
 };
-    
+
 Cons.prototype.isEmpty = function() {
     return false;
 };
-    
+
 // Cons.append: (listof X) -> (listof X)
 Cons.prototype.append = function(b){
     if (b === Empty.EMPTY)
@@ -735,10 +681,9 @@ Cons.prototype.append = function(b){
 	ret = Cons.makeInstance(lst.first(), ret);
 	lst = lst.rest();
     }
-	
+
     return ret;
 };
-    
 
 Cons.prototype.toWrittenString = function(cache) {
     //    cache.put(this, true);
@@ -771,7 +716,6 @@ var explicitConsString = function(p, cache, f) {
     return (texts.join("") + tails.join(""));
 };
 
-
 Cons.prototype.toString = Cons.prototype.toWrittenString;
 
 Cons.prototype.toDisplayedString = function(cache) {
@@ -791,7 +735,7 @@ Cons.prototype.toDisplayedString = function(cache) {
 //	    texts.push(toDisplayedString(p, cache));
 //	    break;
 //	}
-//	if (p.isEmpty()) 
+//	if (p.isEmpty())
 //	    break;
 //	texts.push(toDisplayedString(p.first(), cache));
 //	p = p.rest();
@@ -799,15 +743,13 @@ Cons.prototype.toDisplayedString = function(cache) {
     return "(" + texts.join(" ") + ")";
 };
 
-
-
 Cons.prototype.toDomNode = function(cache) {
     //    cache.put(this, true);
     var node = document.createElement("span"),
         abbr = document.createElement("span");
     node.className = "wescheme-cons";
     abbr.appendChild(document.createTextNode("list"));
- 
+
      node.appendChild(makeLParen());
      node.appendChild(abbr);
     var p = this;
@@ -842,8 +784,6 @@ var explicitConsDomNode = function(p, cache) {
     appendChild(node, toDomNode(p, cache));
     return topNode;
 };
-
-
 
 //////////////////////////////////////////////////////////////////////
 
@@ -892,8 +832,8 @@ Vector.prototype.isEqual = function(other, aUnionFind) {
 Vector.prototype.toList = function() {
     var ret = Empty.EMPTY;
     for (var i = this.length() - 1; i >= 0; i--) {
-	ret = Cons.makeInstance(this.elts[i], ret);	    
-    }	
+	ret = Cons.makeInstance(this.elts[i], ret);
+    }
     return ret;
 };
 
@@ -933,13 +873,7 @@ Vector.prototype.toDomNode = function(cache) {
     return node;
 };
 
-
 //////////////////////////////////////////////////////////////////////
-
-
-
-
-
 
 // Now using mutable strings
 var Str = function(chars) {
@@ -974,7 +908,7 @@ Str.prototype.substring = function(start, end) {
 	if (end == null || end == undefined) {
 		end = this.length;
 	}
-	
+
 	return Str.makeInstance( this.chars.slice(start, end) );
 }
 
@@ -990,14 +924,12 @@ Str.prototype.replace = function(expr, newStr) {
 	return Str.fromString( this.toString().replace(expr, newStr) );
 }
 
-
 Str.prototype.isEqual = function(other, aUnionFind) {
 	if ( !(other instanceof Str || typeof(other) == 'string') ) {
 		return false;
 	}
 	return this.toString() === other.toString();
 }
-
 
 Str.prototype.set = function(i, c) {
 	this.chars[i] = c;
@@ -1014,7 +946,6 @@ Str.prototype.toLowerCase = function() {
 Str.prototype.match = function(regexpr) {
 	return this.toString().match(regexpr);
 }
-
 
 //var _quoteReplacingRegexp = new RegExp("[\"\\\\]", "g");
 var escapeString = function(s) {
@@ -1055,7 +986,6 @@ var replaceUnprintableStringChars = function(s) {
 	return ret.join('');
 };
 
-
 /*
 // Strings
 // For the moment, we just reuse Javascript strings.
@@ -1063,15 +993,14 @@ String = String;
 String.makeInstance = function(s) {
     return s.valueOf();
 };
-    
-    
+
 // WARNING
 // WARNING: we are extending the built-in Javascript string class here!
 // WARNING
 String.prototype.isEqual = function(other, aUnionFind){
     return this == other;
 };
-    
+
 var _quoteReplacingRegexp = new RegExp("[\"\\\\]", "g");
 String.prototype.toWrittenString = function(cache) {
     return '"' + this.replace(_quoteReplacingRegexp,
@@ -1085,7 +1014,6 @@ String.prototype.toDisplayedString = function(cache) {
 };
 */
 
-
 //////////////////////////////////////////////////////////////////////
 
 // makeLowLevelEqHash: -> hashtable
@@ -1094,13 +1022,6 @@ var makeLowLevelEqHash = function() {
     return new _Hashtable(function(x) { return getEqHashCode(x); },
 			  function(x, y) { return x === y; });
 };
-
-
-
-
-
-
-
 
 //////////////////////////////////////////////////////////////////////
 // Hashtables
@@ -1135,10 +1056,10 @@ EqHashTable.prototype.toDisplayedString = function(cache) {
 
 EqHashTable.prototype.isEqual = function(other, aUnionFind) {
     if ( !(other instanceof EqHashTable) ) {
-	return false; 
+	return false;
     }
 
-    if (this.hash.keys().length != other.hash.keys().length) { 
+    if (this.hash.keys().length != other.hash.keys().length) {
 	return false;
     }
 
@@ -1154,14 +1075,12 @@ EqHashTable.prototype.isEqual = function(other, aUnionFind) {
     return true;
 };
 
-
-
 var EqualHashTable = function(inputHash) {
 	this.hash = new _Hashtable(function(x) {
-			return toWrittenString(x); 
+			return toWrittenString(x);
 		},
 		function(x, y) {
-			return isEqual(x, y, new UnionFind()); 
+			return isEqual(x, y, new UnionFind());
 		});
 	this.mutable = true;
 };
@@ -1191,10 +1110,10 @@ EqualHashTable.prototype.toDisplayedString = function(cache) {
 
 EqualHashTable.prototype.isEqual = function(other, aUnionFind) {
     if ( !(other instanceof EqualHashTable) ) {
-	return false; 
+	return false;
     }
 
-    if (this.hash.keys().length != other.hash.keys().length) { 
+    if (this.hash.keys().length != other.hash.keys().length) {
 	return false;
     }
 
@@ -1209,7 +1128,6 @@ EqualHashTable.prototype.isEqual = function(other, aUnionFind) {
     }
     return true;
 };
-
 
 //////////////////////////////////////////////////////////////////////
 
@@ -1242,7 +1160,7 @@ WorldConfig.prototype.toString = function() {
 WorldConfig.prototype.isEqual = function(other, aUnionFind) {
 	if ( ! isEqual(this.startup, other.startup, aUnionFind) ||
 	     ! isEqual(this.shutdown, other.shutdown, aUnionFind) ||
-	     this.startupArgs.length != other.startupArgs.length || 
+	     this.startupArgs.length != other.startupArgs.length ||
 	     ! isEqual(this.shutdownArg, other.shutdownArg, aUnionFind) ) {
 		return false;
 	}
@@ -1254,7 +1172,6 @@ WorldConfig.prototype.isEqual = function(other, aUnionFind) {
 	return true;
 };
 
-
 var Effect = makeStructureType('effect', false, 0, 0, false, false);
 Effect.type.prototype.invokeEffect = function(k) {
 	helpers.raise(types.incompleteExn(
@@ -1263,7 +1180,6 @@ Effect.type.prototype.invokeEffect = function(k) {
 			[]));
 };
 //Effect.handlerIndices = [];
-
 
 //var wrapHandler = function(handler, caller, changeWorld) {
 //	return types.jsObject('function', function() {
@@ -1276,12 +1192,11 @@ Effect.type.prototype.invokeEffect = function(k) {
 //	});
 //};
 
-
 var makeEffectType = function(name, superType, initFieldCnt, impl, guard, caller) {
 	if ( !superType ) {
 		superType = Effect;
 	}
-	
+
 	var newType = makeStructureType(name, superType, initFieldCnt, 0, false, guard);
 	var lastFieldIndex = newType.firstField + newType.numberOfFields;
 
@@ -1290,7 +1205,7 @@ var makeEffectType = function(name, superType, initFieldCnt, impl, guard, caller
 			function(aState, worldUpdater) {
 				helpers.check(aState, worldUpdater, helpers.procArityContains(1),
 					      'update-world', 'procedure (arity 1)', 1);
-				
+
 				changeWorld(function(w, k2) { interpret.call(aState,
 									     worldUpdater, [w],
 									     k2,
@@ -1306,7 +1221,6 @@ var makeEffectType = function(name, superType, initFieldCnt, impl, guard, caller
 	return newType;
 };
 
-
 var RenderEffect = makeStructureType('render-effect', false, 0, 0, false, false);
 RenderEffect.type.prototype.callImplementation = function(caller, k) {
 	helpers.raise(types.incompleteExn(
@@ -1319,7 +1233,7 @@ var makeRenderEffectType = function(name, superType, initFieldCnt, impl, guard) 
 	if ( !superType ) {
 		superType = RenderEffect;
 	}
-	
+
 	var newType = makeStructureType(name, superType, initFieldCnt, 0, false, guard);
 	var lastFieldIndex = newType.firstField + newType.numberOfFields;
 
@@ -1333,24 +1247,10 @@ var makeRenderEffectType = function(name, superType, initFieldCnt, impl, guard) 
 
 //////////////////////////////////////////////////////////////////////
 
-
-
-
-
-
-
-
-
 //////////////////////////////////////////////////////////////////////
 
-
-
-
-
-
-
 var toWrittenString = function(x, cache) {
-    if (! cache) { 
+    if (! cache) {
      	cache = makeLowLevelEqHash();
     }
 
@@ -1383,8 +1283,6 @@ var toWrittenString = function(x, cache) {
     cache.remove(x);
     return returnVal;
 };
-
-
 
 var toDisplayedString = function(x, cache) {
     if (! cache) {
@@ -1419,14 +1317,12 @@ var toDisplayedString = function(x, cache) {
     return returnVal;
 };
 
-
-
 // toDomNode: scheme-value -> dom-node
 var toDomNode = function(x, cache) {
     if (! cache) {
     	cache = makeLowLevelEqHash();
     }
-    
+
     if (isNumber(x)) {
 	return numberToDomNode(x);
     }
@@ -1459,7 +1355,7 @@ var toDomNode = function(x, cache) {
 	returnVal =  x;
     } else if (typeof(x.toDomNode) !== 'undefined') {
 	returnVal =  x.toDomNode(cache);
-    } else if (typeof(x.toWrittenString) !== 'undefined') {	
+    } else if (typeof(x.toWrittenString) !== 'undefined') {
         returnVal = textToDomNode(x.toWrittenString(cache))
     } else if (typeof(x.toDisplayedString) !== 'undefined') {
         returnVal = textToDomNode(x.toDisplayedString(cache));
@@ -1469,7 +1365,6 @@ var toDomNode = function(x, cache) {
     cache.remove(x);
     return returnVal;
 };
-
 
 var textToDomNode = function(text) {
     var chunks = text.split("\n");
@@ -1490,8 +1385,6 @@ var textToDomNode = function(text) {
     }
     return wrapper;
 };
-
-
 
 // numberToDomNode: jsnum -> dom
 // Given a jsnum, produces a dom-node representation.
@@ -1542,7 +1435,6 @@ var rationalToDomNode = function(n) {
       repeatingDecimalNode.appendChild(overlineSpan);
     }
 
-
     var fractionalNode = document.createElement("span");
     var numeratorNode = document.createElement("sup");
     numeratorNode.appendChild(document.createTextNode(String(jsnums.numerator(n))));
@@ -1555,7 +1447,6 @@ var rationalToDomNode = function(n) {
     fractionalNode.appendChild(barNode);
     fractionalNode.appendChild(denominatorNode);
 
-    
     var numberNode = document.createElement("span");
     numberNode.appendChild(repeatingDecimalNode);
     numberNode.appendChild(fractionalNode);
@@ -1565,9 +1456,9 @@ var rationalToDomNode = function(n) {
 
     numberNode.onclick = function(e) {
 	showingRepeating = !showingRepeating;
-	repeatingDecimalNode.style['display'] = 
+	repeatingDecimalNode.style['display'] =
 	    (showingRepeating ? 'inline' : 'none')
-	fractionalNode.style['display'] = 
+	fractionalNode.style['display'] =
 	    (!showingRepeating ? 'inline' : 'none')
     };
     numberNode.style['cursor'] = 'pointer';
@@ -1578,16 +1469,11 @@ var rationalToDomNode = function(n) {
 
     // Alternative: use <sup> and <sub> tags
 
-
-
-
-
 var isNumber = jsnums.isSchemeNumber;
 var isComplex = isNumber;
 var isString = function(s) {
 	return (typeof s === 'string' || s instanceof Str);
 }
-
 
 // isEqual: X Y -> boolean
 // Returns true if the objects are equivalent; otherwise, returns false.
@@ -1614,42 +1500,36 @@ var isEqual = function(x, y, aUnionFind) {
 	    return true;
 	}
 	else {
-	    aUnionFind.merge(x, y); 
+	    aUnionFind.merge(x, y);
 	    return x.isEqual(y, aUnionFind);
 	}
     }
     return false;
 };
 
-
-
-
-
 // liftToplevelToFunctionValue: primitive-function string fixnum scheme-value -> scheme-value
 // Lifts a primitive toplevel or module-bound value to a scheme value.
 var liftToplevelToFunctionValue = function(primitiveF,
 				       name,
-				       minArity, 
+				       minArity,
 				       procedureArityDescription) {
     if (! primitiveF._mobyLiftedFunction) {
 	var lifted = function(args) {
 	    return primitiveF.apply(null, args.slice(0, minArity).concat([args.slice(minArity)]));
 	};
-	lifted.isEqual = function(other, cache) { 
-	    return this === other; 
+	lifted.isEqual = function(other, cache) {
+	    return this === other;
 	}
-	lifted.toWrittenString = function(cache) { 
+	lifted.toWrittenString = function(cache) {
 	    return "#<function:" + name + ">";
 	};
 	lifted.toDisplayedString = lifted.toWrittenString;
 	lifted.procedureArity = procedureArityDescription;
 	primitiveF._mobyLiftedFunction = lifted;
-	    
-    } 
+
+    }
     return primitiveF._mobyLiftedFunction;
 };
-
-
 
 //////////////////////////////////////////////////////////////////////
 var ThreadCell = function(v, isPreserved) {
@@ -1657,10 +1537,7 @@ var ThreadCell = function(v, isPreserved) {
     this.isPreserved = isPreserved || false;
 };
 
-
-
 //////////////////////////////////////////////////////////////////////
-
 
 // Wrapper around functions that return multiple values.
 var ValuesWrapper = function(elts) {
@@ -1680,7 +1557,6 @@ ValuesWrapper.prototype.toDomNode = function(cache) {
     return parent;
 };
 
-
 var UndefinedValue = function() {
 };
 UndefinedValue.prototype.toString = function() {
@@ -1695,14 +1571,12 @@ VoidValue.prototype.toString = function() {
 
 var VOID_VALUE = new VoidValue();
 
-
 var EofValue = function() {};
 EofValue.prototype.toString = function() {
 	return "#<eof>";
 }
 
 var EOF_VALUE = new EofValue();
-
 
 var ClosureValue = function(name, locs, numParams, paramTypes, isRest, closureVals, body) {
     this.name = name;
@@ -1714,9 +1588,6 @@ var ClosureValue = function(name, locs, numParams, paramTypes, isRest, closureVa
     this.body = body;
 };
 
-
-
-
 ClosureValue.prototype.toString = function() {
     if (this.name !== Empty.EMPTY) {
 	return helpers.format("#<function:~a>", [this.name]);
@@ -1724,7 +1595,6 @@ ClosureValue.prototype.toString = function() {
 	return "#<function>";
     }
 };
-
 
 var CaseLambdaValue = function(name, closures) {
     this.name = name;
@@ -1738,8 +1608,6 @@ CaseLambdaValue.prototype.toString = function() {
 	return "#<case-lambda-procedure>";
     }
 };
-
-
 
 var ContinuationClosureValue = function(vstack, cstack) {
     this.name = false;
@@ -1755,11 +1623,7 @@ ContinuationClosureValue.prototype.toString = function() {
     }
 };
 
-
-
 //////////////////////////////////////////////////////////////////////
-
-
 
 var PrefixValue = function() {
     this.slots = [];
@@ -1767,7 +1631,7 @@ var PrefixValue = function() {
 };
 
 PrefixValue.prototype.addSlot = function(v) {
-    if (v === undefined) { 
+    if (v === undefined) {
 	this.slots.push(types.UNDEFINED);
 	this.definedMask.push(false);
     } else {
@@ -1817,18 +1681,14 @@ PrefixValue.prototype.set = function(n, v) {
     }
 };
 
-
-PrefixValue.prototype.length = function() { 
+PrefixValue.prototype.length = function() {
     return this.slots.length;
 };
-
 
 var GlobalBucket = function(name, value) {
     this.name = name;
     this.value = value;
 };
-
-
 
 var ModuleVariableRecord = function(resolvedModuleName,
 				    variableName) {
@@ -1836,12 +1696,7 @@ var ModuleVariableRecord = function(resolvedModuleName,
     this.variableName = variableName;
 };
 
-
-
-
-
 //////////////////////////////////////////////////////////////////////
-
 
 var VariableReference = function(prefix, pos) {
     this.prefix = prefix;
@@ -1880,8 +1735,6 @@ ContMarkRecordControl.prototype.update = function(key, val) {
     return new ContMarkRecordControl(newDict);
 };
 
-
-
 var ContinuationMarkSet = function(dict) {
     this.dict = dict;
 }
@@ -1907,15 +1760,12 @@ ContinuationMarkSet.prototype.ref = function(key) {
     return [];
 };
 
-
 //////////////////////////////////////////////////////////////////////
 
 var ContinuationPrompt = function() {
 };
 
 var defaultContinuationPrompt = new ContinuationPrompt();
-
-
 
 //////////////////////////////////////////////////////////////////////
 
@@ -1941,7 +1791,6 @@ PrimProc.prototype.toDisplayedString = function(cache) {
     return ("#<function:" + this.name + ">");
 };
 
-
 PrimProc.prototype.toDomNode = function(cache) {
     var node = document.createElement("span");
     node.className = "wescheme-primproc";
@@ -1949,12 +1798,10 @@ PrimProc.prototype.toDomNode = function(cache) {
     return node;
 };
 
-
 var CasePrimitive = function(name, cases) {
     this.name = name;
     this.cases = cases;
 };
-
 
 CasePrimitive.prototype.toDomNode = function(cache) {
     var node = document.createElement("span");
@@ -1971,9 +1818,6 @@ CasePrimitive.prototype.toDisplayedString = function(cache) {
     return ("#<function:" + this.name + ">");
 };
 
-
-
-
 /////////////////////////////////////////////////////////////////////
 // Colored Error Message Support
 
@@ -1987,7 +1831,7 @@ Message.prototype.toString = function() {
   for(i = 0; i < this.args.length; i++) {
       toReturn.push(''+this.args[i]);
   }
-  
+
   return toReturn.join("");
 };
 
@@ -2040,12 +1884,7 @@ MultiPart.prototype.toString = function() {
 	return this.text;
 };
 
-
 //////////////////////////////////////////////////////////////////////
-
-
-
-
 
 var makeList = function(args) {
     var result = Empty.EMPTY;
@@ -2055,7 +1894,6 @@ var makeList = function(args) {
     }
     return result;
 };
-
 
 var makeVector = function(args) {
     return Vector.makeInstance(args.length, args);
@@ -2083,7 +1921,6 @@ var makeString = function(s) {
 	}
 };
 
-
 var makeHashEq = function(lst) {
 	var newHash = new EqHashTable();
 	while ( !lst.isEmpty() ) {
@@ -2092,7 +1929,6 @@ var makeHashEq = function(lst) {
 	}
 	return newHash;
 };
-
 
 var makeHashEqual = function(lst) {
 	var newHash = new EqualHashTable();
@@ -2103,7 +1939,6 @@ var makeHashEqual = function(lst) {
 	return newHash;
 };
 
-
 //if there is not enough location information available,
 //this allows for highlighting to be turned off
 var NoLocation = makeVector(['<no-location>', 0,0,0,0]);
@@ -2111,8 +1946,6 @@ var NoLocation = makeVector(['<no-location>', 0,0,0,0]);
 var isNoLocation = function(o) {
   return o === NoLocation;
 };
-
-
 
 var Posn = makeStructureType('posn', false, 2, 0, false, false);
 var Color = makeStructureType('color', false, 4, 0, false, false);
@@ -2125,9 +1958,9 @@ var ArityAtLeast = makeStructureType('arity-at-least', false, 1, 0, false,
 			k(n);
 		});
 
-
 types.symbol = Symbol.makeInstance;
 types.rational = jsnums.makeRational;
+types.roughnum = jsnums.makeRoughnum;
 types['float'] = jsnums.makeFloat;
 types.complex = jsnums.makeComplex;
 types.bignum = jsnums.makeBignum;
@@ -2155,7 +1988,7 @@ types.posn = Posn.constructor;
 types.posnX = function(psn) { return Posn.accessor(psn, 0); };
 types.posnY = function(psn) { return Posn.accessor(psn, 1); };
 
-types.color = function(r, g, b, a) { 
+types.color = function(r, g, b, a) {
     if (a === undefined) {
         a = 255;
     }
@@ -2168,7 +2001,6 @@ types.colorAlpha = function(x) { return Color.accessor(x, 3); };
 
 types.arityAtLeast = ArityAtLeast.constructor;
 types.arityValue = function(arity) { return ArityAtLeast.accessor(arity, 0); };
-
 
 types.FALSE = Logic.FALSE;
 types.TRUE = Logic.TRUE;
@@ -2219,7 +2051,6 @@ types.isContMarkRecordControl = function(x) { return x instanceof ContMarkRecord
 types.continuationMarkSet = function(dict) { return new ContinuationMarkSet(dict); };
 types.isContinuationMarkSet = function(x) { return x instanceof ContinuationMarkSet; };
 
-
 types.PrefixValue = PrefixValue;
 types.GlobalBucket = GlobalBucket;
 types.ModuleVariableRecord = ModuleVariableRecord;
@@ -2228,17 +2059,12 @@ types.VariableReference = VariableReference;
 types.Box = Box;
 types.ThreadCell = ThreadCell;
 
-
-
 types.Class = Class;
-
 
 types.makeStructureType = makeStructureType;
 types.isStructType = function(x) { return x instanceof StructType; };
 
-
 types.makeLowLevelEqHash = makeLowLevelEqHash;
-
 
 // Error type exports
 var InternalError = function(val, contMarks) {
@@ -2253,7 +2079,6 @@ var SchemeError = function(val) {
 }
 types.schemeError = function(v) { return new SchemeError(v); };
 types.isSchemeError = function(v) { return v instanceof SchemeError; };
-
 
 var IncompleteExn = function(constructor, msg, otherArgs) {
 	this.constructor = constructor;
@@ -2314,7 +2139,6 @@ types.isExnFailContractArityWithPosition = ExnFailContractArityWithPosition.pred
 
 types.exnFailContractArityWithPositionLocations = function(exn) { return ExnFailContractArityWithPosition.accessor(exn, 0); };
 
-
 ///////////////////////////////////////
 // World-specific exports
 
@@ -2325,7 +2149,6 @@ types.makeEffectType = makeEffectType;
 types.isEffectType = function(x) {
 	return (x instanceof StructType && x.type.prototype.invokeEffect) ? true : false;
 };
-
 
 types.isEffect = Effect.predicate;
 
@@ -2338,7 +2161,6 @@ types.isEffect = Effect.predicate;
 //				       function(f, args, k) { f(k); });
 //types.effectDoNothing = EffectDoNothing.constructor;
 //types.isEffectDoNothing = EffectDoNothing.predicate;
-
 
 //RenderEffect = makeStructureType('render-effect', false, 2, 0, false,
 //		function(k, domNode, effects, name) {
@@ -2358,11 +2180,8 @@ types.isRenderEffect = RenderEffect.predicate;
 //types.renderEffectEffects = function(x) { return RenderEffect.accessor(x, 1); };
 //types.setRenderEffectEffects = function(x, v) { RenderEffect.mutator(x, 1, v); };
 
-
 types.NoLocation = NoLocation;
 types.isNoLocation = isNoLocation;
-
-
 
 types.ColoredPart = ColoredPart;
 types.Message = Message;
@@ -2373,7 +2192,4 @@ types.isGradientPart = isGradientPart;
 types.MultiPart = MultiPart;
 types.isMultiPart = isMultiPart;
 
-
-
 })();
-
