@@ -12,7 +12,6 @@ runtime.primitive = primitive;
 runtime.state = state;
 runtime.types = types;
 
-
 runtime.State = state.State;
 runtime.Prefix = interpret.Prefix;
 runtime.VariableReference = types.VariableReference;
@@ -23,11 +22,10 @@ runtime.run = interpret.run;
 
 runtime.setDebug = interpret.setDebug;
 
-
-
 runtime.symbol = types.symbol;
 runtime.keyword = types.keyword;
 runtime.rational = types.rational;
+runtime.roughnum = types.roughnum;
 runtime['float'] = types['float'];
 runtime.complex = types.complex;
 runtime.pair = types.pair;
@@ -47,7 +45,6 @@ runtime.posn = types.posn;
 runtime.arityAtLeast = types.arityAtLeast;
 runtime.color = types.color;
 
-
 runtime.isNumber = types.isNumber;
 runtime.isSymbol = types.isSymbol;
 runtime.isChar = types.isChar;
@@ -61,10 +58,8 @@ runtime.isPosn = types.isPosn;
 runtime.isArityAtLeast = types.isArityAtLeast;
 runtime.isByteString = types.isByteString;
 
-
 runtime.FALSE = Logic.FALSE;
 runtime.TRUE = Logic.TRUE;
-
 
 runtime.UNDEFINED = types.UNDEFINED;
 runtime.VOID = types.VOID;
