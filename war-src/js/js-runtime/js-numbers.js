@@ -1955,7 +1955,6 @@ if (typeof(exports) !== 'undefined') {
     // fromSchemeString: string boolean -> (scheme-number | false)
     var fromSchemeString = function(x, exactness) {
 
-      console.log('calling fromSchemeString');
 	var radix = 10
 	var exactness = typeof exactness === 'undefined' ? Exactness.def :
 			exactness === true               ? Exactness.on :
@@ -2086,12 +2085,9 @@ if (typeof(exports) !== 'undefined') {
 							    fractionalNumerator / fractionalDenominator
 
 	var forceInexact = function(o) {
-            console.log('forceInexact called on ' + o);
 	    return typeof o === "number" ? Roughnum.makeInstance(o) :
 					   o.toRoughnum();
 	}
-
-        console.log('inside parseFloat');
 
 	return exactness.floatAsInexactp() ? forceInexact(multiply(sign, add( integralPartValue, fractionalPartValue))) :
 					     multiply(sign, add(integralPartValue, fractionalPartValue));
