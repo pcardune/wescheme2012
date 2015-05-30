@@ -63,10 +63,6 @@ plt.compiler = plt.compiler || {};
     };
 
     literal.prototype.toBytecode = function(){
- console.log('convertign a literal');
- console.log(this.val);
- console.log(this.val.toBytecode);
- console.log(this.val.toBytecode())
       var str = this.val.toBytecode? this.val.toBytecode()
               : this.val===true? "true"
               : this.val===false? "false"
@@ -90,7 +86,6 @@ plt.compiler = plt.compiler || {};
       return 'types.bignum("'+this.toString()+'")';
     };
     jsnums.Roughnum.prototype.toBytecode = function(){
-      console.log('toBytecode of Roughnum ' + this);
       return 'types.roughnum('+this.toString()+')';
     };
     Char.prototype.toBytecode = function(){
