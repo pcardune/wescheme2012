@@ -10,18 +10,6 @@ goog.require("plt.wescheme.makeDynamicModuleLoader");
 goog.require("plt.wescheme.RoundRobin");
 
 
-/* BUGFIX:
- * 
- * These #includes are required by plt.wescheme.RoundRobin.
- * See round_robin.js for more details.
- */
-goog.require('plt.compiler.lex');
-goog.require('plt.compiler.parse');
-goog.require('plt.compiler.desugar');
-goog.require('plt.compiler.analyze');
-goog.require('plt.compiler.compile');
-
-
 (function() {
 
 

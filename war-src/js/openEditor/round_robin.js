@@ -3,12 +3,6 @@
 
 goog.provide("plt.wescheme.RoundRobin");
 
-goog.require('plt.compiler.lex');
-goog.require('plt.compiler.parse');
-goog.require('plt.compiler.desugar');
-goog.require('plt.compiler.analyze');
-goog.require('plt.compiler.compile');
-
 (function() {
     "use strict";
  
@@ -70,11 +64,7 @@ goog.require('plt.compiler.compile');
       // compile it!
       try{
           var start = new Date().getTime();
-          var lexemes     = plt.compiler.lex(code, programName);
-          var AST         = plt.compiler.parse(lexemes);
-          var desugared   = plt.compiler.desugar(AST)[0];  // includes [AST, pinfo]
-          var pinfo       = plt.compiler.analyze(desugared);
-          var local_bytecode  = plt.compiler.compile(desugared, pinfo);
+          var local_bytecode  = wescheme.compile(code, programName);
           onDone(JSON.stringify(local_bytecode));
       } catch (e) {
           var local_error = getError(e).toString();

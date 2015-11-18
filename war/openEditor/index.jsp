@@ -82,9 +82,10 @@
 
 
     <!-- Local compiler files -->
-    <script src="/js/compiler/compiler-calc-min.js" type="text/javascript"></script>
+    <script src="/js/wescheme-js.min.js" type="text/javascript"></script>
 
-    <script src="/js/openEditor/openEditor-calc-min.js" type="text/javascript"></script>
+    <!-- TODO: make this work with minified version of openEditor-calc.js -->
+    <script src="/js/openEditor/openEditor-calc.js" type="text/javascript"></script>
 
 <!--    <script src="https://apis.google.com/js/client:plusone.js"></script>
 -->

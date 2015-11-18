@@ -84,6 +84,12 @@
 (define (generate-js-runtime!)
   (call-system "bash" "./generate-js-runtime.sh"))
 
+(define (ensure-wescheme-js-compiler-installed!)
+  (call-system "npm" "install" "pcardune/wescheme-js#build")
+  (call-system "cp" "node_modules/wescheme-js/lib/wescheme-js.min.js" "war/js/")
+  (call-system "cp" "node_modules/wescheme-js/lib/wescheme-js.min.js.map" "war/js/")
+  )
+
 (define (ensure-codemirror-installed!)
   (unless (directory-exists? codemirror-dir)
     (fprintf (current-error-port) "Codemirror hasn't been pulled.\n  Trying to run: git submodule init/update now...\n")
@@ -142,7 +148,7 @@
 (ensure-codemirror-installed!)
 (ensure-closure-library-installed!)
 (ensure-appengine-installed!)
-
+(ensure-wescheme-js-compiler-installed!)
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 (generate-js-runtime!)
@@ -184,9 +190,6 @@
 
 (printf "Building editor\n")
 (build "openEditor/index.js" "openEditor/openEditor-calc.js")
-
-(printf "Building compiler\n")
-(build "compiler/index.js" "compiler/compiler-calc.js")
 
 ;; ######################################################################
 (printf "Compressing JavaScript libraries.  This may take a few minutes, depending if this is the first time this has been run.\n")
